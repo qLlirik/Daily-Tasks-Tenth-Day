@@ -1,0 +1,409 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Хранилище Model" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Dormitories">
+          <Key>
+            <PropertyRef Name="Hostel" />
+          </Key>
+          <Property Name="Hostel" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Address" Type="varchar" MaxLength="60" Nullable="false" />
+          <Property Name="District" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="Picture" Type="image" Nullable="false" />
+          <Property Name="Owner" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="RoomCount" Type="int" Nullable="false" />
+          <Property Name="Beds" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Living">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Document" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="LodgerID" Type="int" Nullable="false" />
+          <Property Name="RoomID" Type="int" Nullable="false" />
+          <Property Name="Begin" Type="datetime" Nullable="false" />
+          <Property Name="Giver" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Comment" Type="varchar(max)" />
+          <Property Name="Payment" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="Settlement" Type="datetime" Nullable="false" />
+          <Property Name="End" Type="datetime" />
+          <Property Name="Reason" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="Lodgers">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="Passport" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="PassportDate" Type="datetime" Nullable="false" />
+          <Property Name="Region" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="Work" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Children" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Rooms">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Square" Type="float" Nullable="false" />
+          <Property Name="Comment" Type="varchar(max)" />
+          <Property Name="RoomBeds" Type="tinyint" Nullable="false" />
+          <Property Name="TypeID" Type="int" Nullable="false" />
+          <Property Name="Storey" Type="tinyint" Nullable="false" />
+          <Property Name="HosteID" Type="int" Nullable="false" />
+          <Property Name="NumberInDormitory" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RoomType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <Association Name="FK_Living_Lodgers">
+          <End Role="Lodgers" Type="Self.Lodgers" Multiplicity="1" />
+          <End Role="Living" Type="Self.Living" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lodgers">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Living">
+              <PropertyRef Name="LodgerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Living_Rooms">
+          <End Role="Rooms" Type="Self.Rooms" Multiplicity="1" />
+          <End Role="Living" Type="Self.Living" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Rooms">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Living">
+              <PropertyRef Name="RoomID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Rooms_Dormitories">
+          <End Role="Dormitories" Type="Self.Dormitories" Multiplicity="1" />
+          <End Role="Rooms" Type="Self.Rooms" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dormitories">
+              <PropertyRef Name="Hostel" />
+            </Principal>
+            <Dependent Role="Rooms">
+              <PropertyRef Name="HosteID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Rooms_RoomType">
+          <End Role="RoomType" Type="Self.RoomType" Multiplicity="1" />
+          <End Role="Rooms" Type="Self.Rooms" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RoomType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Rooms">
+              <PropertyRef Name="TypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище ModelContainer">
+          <EntitySet Name="Dormitories" EntityType="Self.Dormitories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Living" EntityType="Self.Living" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Lodgers" EntityType="Self.Lodgers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Rooms" EntityType="Self.Rooms" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RoomType" EntityType="Self.RoomType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Living_Lodgers" Association="Self.FK_Living_Lodgers">
+            <End Role="Lodgers" EntitySet="Lodgers" />
+            <End Role="Living" EntitySet="Living" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Living_Rooms" Association="Self.FK_Living_Rooms">
+            <End Role="Rooms" EntitySet="Rooms" />
+            <End Role="Living" EntitySet="Living" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Rooms_Dormitories" Association="Self.FK_Rooms_Dormitories">
+            <End Role="Dormitories" EntitySet="Dormitories" />
+            <End Role="Rooms" EntitySet="Rooms" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Rooms_RoomType" Association="Self.FK_Rooms_RoomType">
+            <End Role="RoomType" EntitySet="RoomType" />
+            <End Role="Rooms" EntitySet="Rooms" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="Entity" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Dormitories" EntityType="Model.Dormitories" />
+          <EntitySet Name="Living" EntityType="Model.Living" />
+          <EntitySet Name="Lodgers" EntityType="Model.Lodgers" />
+          <EntitySet Name="Rooms" EntityType="Model.Rooms" />
+          <EntitySet Name="RoomType" EntityType="Model.RoomType" />
+          <EntitySet Name="sysdiagrams" EntityType="Model.sysdiagrams" />
+          <AssociationSet Name="FK_Rooms_Dormitories" Association="Model.FK_Rooms_Dormitories">
+            <End Role="Dormitories" EntitySet="Dormitories" />
+            <End Role="Rooms" EntitySet="Rooms" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Living_Lodgers" Association="Model.FK_Living_Lodgers">
+            <End Role="Lodgers" EntitySet="Lodgers" />
+            <End Role="Living" EntitySet="Living" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Living_Rooms" Association="Model.FK_Living_Rooms">
+            <End Role="Rooms" EntitySet="Rooms" />
+            <End Role="Living" EntitySet="Living" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Rooms_RoomType" Association="Model.FK_Rooms_RoomType">
+            <End Role="RoomType" EntitySet="RoomType" />
+            <End Role="Rooms" EntitySet="Rooms" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Dormitories">
+          <Key>
+            <PropertyRef Name="Hostel" />
+          </Key>
+          <Property Name="Hostel" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Address" Type="String" Nullable="false" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="District" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="Picture" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="Owner" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="RoomCount" Type="Int32" Nullable="false" />
+          <Property Name="Beds" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Rooms" Relationship="Model.FK_Rooms_Dormitories" FromRole="Dormitories" ToRole="Rooms" />
+        </EntityType>
+        <EntityType Name="Living">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Document" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="LodgerID" Type="Int32" Nullable="false" />
+          <Property Name="RoomID" Type="Int32" Nullable="false" />
+          <Property Name="Begin" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Giver" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Payment" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="Settlement" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="End" Type="DateTime" Precision="3" />
+          <Property Name="Reason" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Lodgers" Relationship="Model.FK_Living_Lodgers" FromRole="Living" ToRole="Lodgers" />
+          <NavigationProperty Name="Rooms" Relationship="Model.FK_Living_Rooms" FromRole="Living" ToRole="Rooms" />
+        </EntityType>
+        <EntityType Name="Lodgers">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="Passport" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PassportDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Region" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="Work" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Children" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Living" Relationship="Model.FK_Living_Lodgers" FromRole="Lodgers" ToRole="Living" />
+        </EntityType>
+        <EntityType Name="Rooms">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Square" Type="Double" Nullable="false" />
+          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="RoomBeds" Type="Byte" Nullable="false" />
+          <Property Name="TypeID" Type="Int32" Nullable="false" />
+          <Property Name="Storey" Type="Byte" Nullable="false" />
+          <Property Name="HosteID" Type="Int32" Nullable="false" />
+          <Property Name="NumberInDormitory" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Dormitories" Relationship="Model.FK_Rooms_Dormitories" FromRole="Rooms" ToRole="Dormitories" />
+          <NavigationProperty Name="Living" Relationship="Model.FK_Living_Rooms" FromRole="Rooms" ToRole="Living" />
+          <NavigationProperty Name="RoomType" Relationship="Model.FK_Rooms_RoomType" FromRole="Rooms" ToRole="RoomType" />
+        </EntityType>
+        <EntityType Name="RoomType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Rooms" Relationship="Model.FK_Rooms_RoomType" FromRole="RoomType" ToRole="Rooms" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <Association Name="FK_Rooms_Dormitories">
+          <End Type="Model.Dormitories" Role="Dormitories" Multiplicity="1" />
+          <End Type="Model.Rooms" Role="Rooms" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dormitories">
+              <PropertyRef Name="Hostel" />
+            </Principal>
+            <Dependent Role="Rooms">
+              <PropertyRef Name="HosteID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Living_Lodgers">
+          <End Type="Model.Lodgers" Role="Lodgers" Multiplicity="1" />
+          <End Type="Model.Living" Role="Living" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lodgers">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Living">
+              <PropertyRef Name="LodgerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Living_Rooms">
+          <End Type="Model.Rooms" Role="Rooms" Multiplicity="1" />
+          <End Type="Model.Living" Role="Living" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Rooms">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Living">
+              <PropertyRef Name="RoomID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Rooms_RoomType">
+          <End Type="Model.RoomType" Role="RoomType" Multiplicity="1" />
+          <End Type="Model.Rooms" Role="Rooms" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RoomType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Rooms">
+              <PropertyRef Name="TypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище ModelContainer" CdmEntityContainer="Entity">
+          <EntitySetMapping Name="Dormitories">
+            <EntityTypeMapping TypeName="Model.Dormitories">
+              <MappingFragment StoreEntitySet="Dormitories">
+                <ScalarProperty Name="Beds" ColumnName="Beds" />
+                <ScalarProperty Name="RoomCount" ColumnName="RoomCount" />
+                <ScalarProperty Name="Owner" ColumnName="Owner" />
+                <ScalarProperty Name="Picture" ColumnName="Picture" />
+                <ScalarProperty Name="District" ColumnName="District" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Hostel" ColumnName="Hostel" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Living">
+            <EntityTypeMapping TypeName="Model.Living">
+              <MappingFragment StoreEntitySet="Living">
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="End" ColumnName="End" />
+                <ScalarProperty Name="Settlement" ColumnName="Settlement" />
+                <ScalarProperty Name="Payment" ColumnName="Payment" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="Giver" ColumnName="Giver" />
+                <ScalarProperty Name="Begin" ColumnName="Begin" />
+                <ScalarProperty Name="RoomID" ColumnName="RoomID" />
+                <ScalarProperty Name="LodgerID" ColumnName="LodgerID" />
+                <ScalarProperty Name="Document" ColumnName="Document" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Lodgers">
+            <EntityTypeMapping TypeName="Model.Lodgers">
+              <MappingFragment StoreEntitySet="Lodgers">
+                <ScalarProperty Name="Children" ColumnName="Children" />
+                <ScalarProperty Name="Work" ColumnName="Work" />
+                <ScalarProperty Name="Region" ColumnName="Region" />
+                <ScalarProperty Name="PassportDate" ColumnName="PassportDate" />
+                <ScalarProperty Name="Passport" ColumnName="Passport" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Rooms">
+            <EntityTypeMapping TypeName="Model.Rooms">
+              <MappingFragment StoreEntitySet="Rooms">
+                <ScalarProperty Name="NumberInDormitory" ColumnName="NumberInDormitory" />
+                <ScalarProperty Name="HosteID" ColumnName="HosteID" />
+                <ScalarProperty Name="Storey" ColumnName="Storey" />
+                <ScalarProperty Name="TypeID" ColumnName="TypeID" />
+                <ScalarProperty Name="RoomBeds" ColumnName="RoomBeds" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="Square" ColumnName="Square" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RoomType">
+            <EntityTypeMapping TypeName="Model.RoomType">
+              <MappingFragment StoreEntitySet="RoomType">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="Model.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
